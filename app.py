@@ -6,12 +6,46 @@ import streamlit as st
 from dotenv import load_dotenv
 from sentence_transformers import SentenceTransformer
 from groq import Groq
+import streamlit as st
 
-# Custom Styling
+# Initialize session state for dark mode (default: True)
+if "dark_mode" not in st.session_state:
+    st.session_state.dark_mode = True
+
+# Icon switch
+icon = "🔆" if st.session_state.dark_mode else "🌙"
+
+# Custom CSS to remove container and position icon in the top-right corner
 st.markdown(
     """
     <style>
-        body {background-color: #0A192F; color: #E0E5EC; font-family: 'Segoe UI', sans-serif;}
+    .stButton > button {
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        font-size: 24px !important;
+        position: absolute !important;
+        top: 10px !important;
+        right: 10px !important;
+        cursor: pointer !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+# Toggle button (tap to switch modes)
+if st.button(icon, key="dark_mode_toggle"):
+    st.session_state.dark_mode = not st.session_state.dark_mode
+    st.rerun()
+
+# Apply styles for dark & light modes
+if st.session_state.dark_mode:
+    st.markdown(
+        """
+        <style>
+        body, .stApp { background-color: #0A192F; color: #E0E5EC; font-family: 'Segoe UI', sans-serif; }
+        h1, h2, h3, p, label { color: white !important; }
         .stTextInput > div > div > input {
             background-color: #112240; 
             color: #E0E5EC; 
@@ -20,31 +54,28 @@ st.markdown(
             border: 2px solid transparent;
             box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
         }
-        .stButton > button {
-            background-color: #1F4068; 
-            color: #E0E5EC; 
-            border: none; 
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+else:
+    st.markdown(
+        """
+        <style>
+        body, .stApp { background-color: #ffffff; color: #333; }
+        h1, h2, h3, p, label { color: #333 !important; }
+        .stTextInput > div > div > input {
+            background-color: #f8f9fa; 
+            color: #333; 
             border-radius: 8px; 
-            padding: 12px 18px; 
-            transition: 0.3s;
-            font-weight: bold;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+            padding: 10px; 
+            border: 1px solid #ccc;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
         }
-        .stButton > button:hover {
-            background-color: #2C698D;
-            transform: scale(1.05);
-        }
-        .stTitle {color: white; font-size: 28px; font-weight: bold;}
-        .container {
-            background-color: #112240;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.1);
-        }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
 
 # Hide Streamlit UI elements
 st.markdown(
