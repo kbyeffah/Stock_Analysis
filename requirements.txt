@@ -1,0 +1,10 @@
+yfinance
+faiss-cpu
+groq
+python-dotenv
+numpy
+requests
+scikit-learn
+streamlit
+sentence-transformers
+asyncio
