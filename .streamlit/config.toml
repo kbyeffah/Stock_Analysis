@@ -1,0 +1,11 @@
+[client]
+toolbarMode = "viewer"
+
+[global]
+showWarningOnDirectExecution = false
+
+[browser]
+gatherUsageStats = false
+
+[server]
+enableCORS = false
