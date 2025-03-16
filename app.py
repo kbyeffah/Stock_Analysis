@@ -7,17 +7,56 @@ from dotenv import load_dotenv
 from sentence_transformers import SentenceTransformer
 from groq import Groq
 
-# Hides Streamlit UI elements with CSS
-hide_streamlit_style = """
+# Custom Styling
+st.markdown(
+    """
+    <style>
+        body {background-color: #0A192F; color: #E0E5EC; font-family: 'Segoe UI', sans-serif;}
+        .stTextInput > div > div > input {
+            background-color: #112240; 
+            color: #E0E5EC; 
+            border-radius: 8px; 
+            padding: 10px; 
+            border: 2px solid transparent;
+            box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
+        }
+        .stButton > button {
+            background-color: #1F4068; 
+            color: #E0E5EC; 
+            border: none; 
+            border-radius: 8px; 
+            padding: 12px 18px; 
+            transition: 0.3s;
+            font-weight: bold;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+        }
+        .stButton > button:hover {
+            background-color: #2C698D;
+            transform: scale(1.05);
+        }
+        .stTitle {color: white; font-size: 28px; font-weight: bold;}
+        .container {
+            background-color: #112240;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.1);
+        }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+# Hide Streamlit UI elements
+st.markdown(
+    """
     <style>
         #MainMenu {visibility: hidden;}
         footer {visibility: hidden;}
         header {visibility: hidden;}
-        .stDeployButton {display: none !important;} 
-        [data-testid="stProfileMenu"] {display: none !important;}  
     </style>
-"""
-st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+    """,
+    unsafe_allow_html=True
+)
 
 
 # Load environment variables
@@ -109,16 +148,18 @@ stock_data = [get_stock_info(symbol) for symbol in default_stocks]
 store_stock_embeddings(stock_data)
 
 # Streamlit UI
-st.title('Stock Analysis')
-query = st.text_input('Ask About Stocks:', '')
+st.title('Stock Analysis Dashboard')
 
-if st.button('Get Stock Info'):
-    stocks = find_similar_stocks(query)
-    analysis = analyze_stocks(query, stocks)
+with st.container():
+    query = st.text_input('Ask About Stocks:', '')
 
-    st.write("### Stock Insights:")
-    st.write(analysis)
+    if st.button('Get Stock Info'):
+        stocks = find_similar_stocks(query)
+        analysis = analyze_stocks(query, stocks)
 
-    st.markdown("---")
-    if not stocks:
-        st.error("No relevant stocks found.")
+        st.markdown("### Stock Insights:")
+        st.markdown(f"<div class='stMarkdown'>{analysis}</div>", unsafe_allow_html=True)
+
+        st.markdown("---")
+        if not stocks:
+            st.error("No relevant stocks found.")
