@@ -6,7 +6,15 @@ import streamlit as st
 from dotenv import load_dotenv
 from sentence_transformers import SentenceTransformer
 from groq import Groq
-import streamlit as st
+
+# Load environment variables
+load_dotenv()
+groq_api_key = os.getenv("GROQ_API_KEY")
+if not groq_api_key:
+    st.error("GROQ_API_KEY is missing. Set it in Railway's environment variables.")
+    st.stop()
+
+client = Groq(api_key=groq_api_key)
 
 # Initialize session state for dark mode (default: True)
 if "dark_mode" not in st.session_state:
@@ -88,12 +96,6 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-
-
-# Load environment variables
-load_dotenv()
-groq_api_key = os.getenv('GROQ_API_KEY')
-client = Groq(api_key=groq_api_key)
 
 # Load Sentence-Transformer Model (22MB)
 embedding_model = SentenceTransformer("sentence-transformers/paraphrase-MiniLM-L3-v2")
@@ -194,3 +196,7 @@ with st.container():
         st.markdown("---")
         if not stocks:
             st.error("No relevant stocks found.")
+
+# Ensure Railway assigns the correct port
+if __name__ == "__main__":
+    os.system(f"streamlit run app.py --server.port {os.getenv('PORT', '8080')} --server.address 0.0.0.0")

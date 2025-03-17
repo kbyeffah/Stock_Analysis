@@ -1,3 +1,9 @@
+[server]
+headless = true
+port = 8080
+enableCORS = false
+enableXsrfProtection = false
+
 [client]
 toolbarMode = "viewer"
 
@@ -6,6 +12,3 @@ showWarningOnDirectExecution = false
 
 [browser]
 gatherUsageStats = false
-
-[server]
-enableCORS = false
